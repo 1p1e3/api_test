@@ -26,7 +26,7 @@ class Settings(BaseSettings):
         super().__init__(_env_file=env_file, **data)
     
 
-    @field_validator
+    @field_validator('API_BASE_URL')
     @classmethod
     def validate_api_base_url(cls, v) -> str:
         if not isinstance(v, str):
