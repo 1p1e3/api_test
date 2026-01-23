@@ -24,24 +24,49 @@ class APIClient:
             **(extra_header or {})
         })
 
+        self.timeout = timeout
+
 
         # 重试策略
         retry_strategy = Retry(
             total=max_retries,
             backoff_factor=1,
             status_forcelist=[429, 500, 502, 503, 504],
-            allowed_methods=["HEAD", "GET", "OPTIONS", "POST", "PUT", "DELETE"]
+            allowed_methods=['HEAD', 'GET', 'OPTIONS', 'POST', 'PUT', 'DELETE']
         )
 
 
         # 配置适配器
         adapter = HTTPAdapter(max_retries=retry_strategy)
-        self.session.mount("http://", adapter)
-        self.session.mount("https://", adapter)
+        self.session.mount('http://', adapter)
+        self.session.mount('https://', adapter)
 
 
         # token
-        self.token = Optional[str] = None
+        self.token: Optional[str] = None
+
+
+
+    def set_token(self, token: str) -> None:
+        """为请求头添加 token
+
+        Args:
+            token (_type_): 默认 Bearer Token
+        """
+        self.token = token
+        self.session.headers.update({
+            'Authorization': f'Bearer {token}'
+        })
+
+    
+    def clear_token(self) -> None:
+        """清除 token
+        """
+        self.token = None
+        self.session.headers.pop('Authorization', None)
+    
+
+
 
 
         
