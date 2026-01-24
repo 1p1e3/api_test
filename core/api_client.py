@@ -3,6 +3,7 @@ from requests import Session
 from config.settings import settings
 from urllib3.util.retry import Retry
 from requests.adapters import HTTPAdapter
+import requests
 
 class APIClient:
     def __init__(self,
@@ -66,7 +67,8 @@ class APIClient:
         self.session.headers.pop('Authorization', None)
     
 
-
+    def request() -> requests.Response:
+        pass
 
 
         
