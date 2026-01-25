@@ -98,10 +98,57 @@ class APIClient:
         try:
             response = self.session.request(method=method, url=url, **kwargs)
         except Exception as e:
-            logger.error(f'请求失败: {e}')
+            logger.error(f'通用请求失败: {e}')
             raise e
 
  
         return response
-        
+    
+    
+    # 快捷请求方法
+    def get(self, api: str, **kwargs) -> requests.Response:
+        try:
+            response = self.session.request('GET', api, **kwargs)
+            return response
+        except Exception as e:
+            logger.error(f'GET 请求失败: {e}')
 
+
+    def post(self, api: str, **kwargs) -> requests.Response:
+        try:
+            response = self.session.request('POST', api, **kwargs)
+            return response
+        except Exception as e:
+            logger.error(f'POST 请求失败: {e}')
+    
+
+    def put(self, api: str, **kwargs) -> requests.Response:
+        try:
+            response = self.session.request('PUT', api, **kwargs)
+            return response
+        except Exception as e:
+            logger.error(f'PUT 请求失败: {e}')
+    
+
+    def delete(self, api: str, **kwargs) -> requests.Response:
+        try:
+            response = self.session.request('DELETE', api, **kwargs)
+            return response
+        except Exception as e:
+            logger.error(f'DELETE 请求失败: {e}')
+    
+
+    def patch(self, api: str, **kwargs) -> requests.Response:
+        try:
+            response = self.session.request('PATCH', api, **kwargs)
+            return response
+        except Exception as e:
+            logger.error(f'PATCH 请求失败: {e}')
+    
+
+    def options(self, api: str, **kwargs) -> requests.Response:
+        try:
+            response = self.session.request('OPTIONS', api, **kwargs)
+            return response
+        except Exception as e:
+            logger.error(f'OPTIONS 请求失败: {e}')
