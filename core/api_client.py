@@ -1,9 +1,11 @@
-from typing import Dict, Optional
+from typing import Any, Dict, Optional, Union
 from requests import Session
 from config.settings import settings
 from urllib3.util.retry import Retry
 from requests.adapters import HTTPAdapter
 import requests
+
+from utils.logger import logger
 
 class APIClient:
     def __init__(self,
@@ -67,9 +69,39 @@ class APIClient:
         self.session.headers.pop('Authorization', None)
     
 
-    def request() -> requests.Response:
-        pass
+    def request(self, 
+                method: str,
+                api: str,
+                *,
+                params: Optional[Dict[str, Any]] = None,
+                data: Optional[Union[Dict[str, Any], str]] = None,
+                json: Optional[Dict[str, Any]] = None,
+                headers: Optional[Dict[str, str]] = None,
+                timeout: Optional[int] = None,
+                **kwargs,
+                ) -> requests.Response:
+        url = self.base_url.rstrip('/') + '/' + api.lstrip('/')
 
+        # 处理请求数据
+        req_kwargs = {
+            'params': params,
+            'data': data,
+            'json': json,
+            'headers': headers,
+            'timeout': timeout or self.timeout,
+            **kwargs,
+        }
+        # 移除 None 值
+        req_kwargs = {k : v for k, v in req_kwargs.items() if v is not None }
 
+        # 发送请求
+        try:
+            response = self.session.request(method=method, url=url, **kwargs)
+        except Exception as e:
+            logger.error(f'请求失败: {e}')
+            raise e
+
+ 
+        return response
         
 
