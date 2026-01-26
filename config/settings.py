@@ -2,6 +2,7 @@ from pydantic_settings import BaseSettings
 from typing import Literal
 from pydantic import Field, field_validator
 import os
+from urllib.parse import quote_plus
 
 Environment = Literal['dev', 'test', 'prod']
 
@@ -13,6 +14,14 @@ class Settings(BaseSettings):
     USERNAME: str
 
     PASSWORD: str
+
+
+    # 数据库
+    MYSQL_HOST: str
+    MYSQL_PORT: int
+    MYSQL_USERNAME: str
+    MYSQL_PASSWORD: str
+    MYSQL_DB_NAME: str
 
 
     def __init__(self, **data):
@@ -39,6 +48,12 @@ class Settings(BaseSettings):
 
         return v.rstrip('/')
     
+    @property
+    def MYSQL_DB_URL(self) -> str:
+        # 特殊字符转义处理
+        password = quote_plus(self.MYSQL_PASSWORD)
+        return f"mysql+pymysql://{self.MYSQL_USERNAME}:{password}@{self.MYSQL_HOST}:{self.MYSQL_PORT}/{self.MYSQL_DB_NAME}"
+
 
     model_config = {
         'extra': 'ignore',
