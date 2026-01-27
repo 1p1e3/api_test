@@ -22,6 +22,8 @@ class Settings(BaseSettings):
     MYSQL_USERNAME: str
     MYSQL_PASSWORD: str
     MYSQL_DB_NAME: str
+    MYSQL_POOL_SIZE: int
+    MYSQL_MAX_OVERFLOW: int
 
 
     def __init__(self, **data):
@@ -52,7 +54,7 @@ class Settings(BaseSettings):
     def MYSQL_DB_URL(self) -> str:
         # 特殊字符转义处理
         password = quote_plus(self.MYSQL_PASSWORD)
-        return f"mysql+pymysql://{self.MYSQL_USERNAME}:{password}@{self.MYSQL_HOST}:{self.MYSQL_PORT}/{self.MYSQL_DB_NAME}"
+        return f'mysql+pymysql://{self.MYSQL_USERNAME}:{password}@{self.MYSQL_HOST}:{self.MYSQL_PORT}/{self.MYSQL_DB_NAME}'
 
 
     model_config = {
