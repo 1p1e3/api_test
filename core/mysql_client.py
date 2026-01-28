@@ -1,3 +1,4 @@
+from contextlib import contextmanager
 from typing import Optional
 
 from sqlalchemy import create_engine
@@ -6,7 +7,7 @@ from config.settings import settings
 from sqlalchemy.pool import QueuePool
 from sqlalchemy.orm import sessionmaker, Session
 
-from utils import logger
+from utils.logger import logger
 
 
 class MySQLClient:
@@ -35,3 +36,25 @@ class MySQLClient:
         self.SessionLocal = sessionmaker(bind=self.engine)
 
         logger.info(f'{settings.APP_ENV} 环境 MySQLClient 初始化成功')
+    
+
+    def get_session(self) -> Session:
+        return self.SessionLocal()
+    
+
+    @contextmanager
+    def get_auto_session(self):
+        session = self.SessionLocal()
+
+        try:
+            yield session
+            session.commit()
+        except Exception as e:
+            session.rollback()
+            logger.error(f'MySQL 事务失败: {e}')
+            raise
+        finally:
+            session.close()
+    
+
+    
