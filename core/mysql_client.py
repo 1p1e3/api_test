@@ -1,7 +1,7 @@
 from contextlib import contextmanager
 from typing import Optional
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.engine import Engine
 from config.settings import settings
 from sqlalchemy.pool import QueuePool
@@ -56,5 +56,15 @@ class MySQLClient:
         finally:
             session.close()
     
+
+    def query_one(self, sql: str, params: Optional[Dict[str, Any]] = None) -> Optional[Dict[str, Any]]:
+        """查询单条记录（返回 dict）"""
+        with self.get_auto_session() as session:
+            result = session.execute(text(sql), params or {})
+            row = result.fetchone()
+            if row:
+                keys = result.keys()
+                return dict(zip(keys, row))
+            return None
 
     
