@@ -1,5 +1,5 @@
 from contextlib import contextmanager
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 
 from sqlalchemy import create_engine, text
 from sqlalchemy.engine import Engine
@@ -66,5 +66,13 @@ class MySQLClient:
                 keys = result.keys()
                 return dict(zip(keys, row))
             return None
+    
+
+    def query_all(self, sql: str, params: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]:
+        """查询多条记录（返回 list[dict]）"""
+        with self.get_auto_session() as session:
+            result = session.execute(text(sql), params or {})
+            keys = result.keys()
+            return [dict(zip(keys, row)) for row in result.fetchall()]
 
     
