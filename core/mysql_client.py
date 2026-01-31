@@ -75,4 +75,17 @@ class MySQLClient:
             keys = result.keys()
             return [dict(zip(keys, row)) for row in result.fetchall()]
 
+
+    def execute(self, sql: str, params: Optional[Dict[str, Any]] = None) -> int:
+        """执行 DML（INSERT/UPDATE/DELETE），返回影响行数"""
+        with self.get_auto_session() as session:
+            result = session.execute(text(sql), params or {})
+            return result.rowcount
+    
+
+    def execute_many(self, sql: str, params_list: List[Dict[str, Any]]) -> int:
+        """批量执行（如批量插入）"""
+        with self.get_auto_session() as session:
+            result = session.execute(text(sql), params_list)
+            return result.rowcount
     
