@@ -11,7 +11,7 @@ from utils.logger import logger
 
 
 class MySQLClient:
-    """原生 SQL 操作封装
+    """SQL 操作封装
     """
 
     def __init__(self, 
