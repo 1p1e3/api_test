@@ -9,7 +9,7 @@ _logger.remove()
 
 # 输出到文件
 _logger.add(
-    sink=LOGS_DIR.joinpath('logs'),
+    sink=LOGS_DIR.joinpath('app.logs'),
     level='INFO',
     rotation='1 day',
     retention='7 days',
