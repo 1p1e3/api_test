@@ -80,8 +80,10 @@ class APIClient:
                 timeout: Optional[int] = None,
                 **kwargs,
                 ) -> requests.Response:
-        url = self.base_url.rstrip('/') + '/' + api.lstrip('/')
+        full_url = self.base_url.rstrip('/') + '/' + api.lstrip('/')
 
+        print(full_url)
+        
         # 处理请求数据
         req_kwargs = {
             'params': params,
@@ -96,7 +98,7 @@ class APIClient:
 
         # 发送请求
         try:
-            response = self.session.request(method=method, url=url, **kwargs)
+            response = self.session.request(method=method, url=full_url, **kwargs)
         except Exception as e:
             logger.error(f'通用请求失败: {e}')
             raise e
