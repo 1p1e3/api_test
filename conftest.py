@@ -10,19 +10,25 @@ def api_client():
     return APIClient()
 
 
+
+
 @pytest.fixture(scope='session')
-def auth_token():
+def authorized_client(api_client):
     """
-    登录获取 token
+    带认证的通用客户端
     """
-    client = APIClient()
-    resp = client.request('POST', f'login', json={
+    resp = api_client.request('POST', f'login', json={
         'username': settings.USERNAME,
         'password': settings.PASSWORD
     })
+    assert resp.status_code == 200
 
     token = resp.json()['data']['token']
 
-    return token
+    assert token, '创建带认证的客户端失败, 未获取到 token'
+
+    api_client.set_token(token)
+
+    return api_client
 
 
