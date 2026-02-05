@@ -7,7 +7,7 @@ import requests
 
 from utils.logger import logger
 
-class APIClient:
+class path_nameClient:
     def __init__(self,
                  base_url: Optional[str] = None,
                  extra_header: Optional[Dict[str, str]] = None,
@@ -16,7 +16,7 @@ class APIClient:
                  ):
         
         # 优先使用实例化时显式传入的 base_url
-        self.base_url = base_url or settings.API_BASE_URL
+        self.base_url = base_url or settings.path_name_BASE_URL
         
         # 
         self.session = Session()
@@ -71,7 +71,7 @@ class APIClient:
 
     def request(self, 
                 method: str,
-                api: str,
+                path_name: str,
                 *,
                 params: Optional[Dict[str, Any]] = None,
                 data: Optional[Union[Dict[str, Any], str]] = None,
@@ -80,7 +80,7 @@ class APIClient:
                 timeout: Optional[int] = None,
                 **kwargs,
                 ) -> requests.Response:
-        full_url = self.base_url.rstrip('/') + '/' + api.lstrip('/')
+        full_url = self.base_url.rstrip('/') + '/' + path_name.lstrip('/')
 
         print(full_url)
         
@@ -108,49 +108,49 @@ class APIClient:
     
     
     # 快捷请求方法
-    def get(self, api: str, **kwargs) -> requests.Response:
+    def get(self, path_name: str, **kwargs) -> requests.Response:
         try:
-            response = self.session.request('GET', api, **kwargs)
+            response = self.session.request('GET', path_name, **kwargs)
             return response
         except Exception as e:
             logger.error(f'GET 请求失败: {e}')
 
 
-    def post(self, api: str, **kwargs) -> requests.Response:
+    def post(self, path_name: str, **kwargs) -> requests.Response:
         try:
-            response = self.session.request('POST', api, **kwargs)
+            response = self.session.request('POST', path_name, **kwargs)
             return response
         except Exception as e:
             logger.error(f'POST 请求失败: {e}')
     
 
-    def put(self, api: str, **kwargs) -> requests.Response:
+    def put(self, path_name: str, **kwargs) -> requests.Response:
         try:
-            response = self.session.request('PUT', api, **kwargs)
+            response = self.session.request('PUT', path_name, **kwargs)
             return response
         except Exception as e:
             logger.error(f'PUT 请求失败: {e}')
     
 
-    def delete(self, api: str, **kwargs) -> requests.Response:
+    def delete(self, path_name: str, **kwargs) -> requests.Response:
         try:
-            response = self.session.request('DELETE', api, **kwargs)
+            response = self.session.request('DELETE', path_name, **kwargs)
             return response
         except Exception as e:
             logger.error(f'DELETE 请求失败: {e}')
     
 
-    def patch(self, api: str, **kwargs) -> requests.Response:
+    def patch(self, path_name: str, **kwargs) -> requests.Response:
         try:
-            response = self.session.request('PATCH', api, **kwargs)
+            response = self.session.request('PATCH', path_name, **kwargs)
             return response
         except Exception as e:
             logger.error(f'PATCH 请求失败: {e}')
     
 
-    def options(self, api: str, **kwargs) -> requests.Response:
+    def options(self, path_name: str, **kwargs) -> requests.Response:
         try:
-            response = self.session.request('OPTIONS', api, **kwargs)
+            response = self.session.request('OPTIONS', path_name, **kwargs)
             return response
         except Exception as e:
             logger.error(f'OPTIONS 请求失败: {e}')
