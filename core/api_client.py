@@ -162,10 +162,11 @@ def unauthorized_client():
     return APIClient()
 
 
-def authorized_client(api_client):
+def authorized_client():
     """
     带认证的通用客户端
     """
+    api_client = unauthorized_client()
     resp = api_client.request('POST', f'login', json={
         'username': settings.USERNAME,
         'password': settings.PASSWORD
