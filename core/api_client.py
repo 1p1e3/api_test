@@ -7,7 +7,7 @@ import requests
 
 from utils.logger import logger
 
-class path_nameClient:
+class APIClient:
     def __init__(self,
                  base_url: Optional[str] = None,
                  extra_header: Optional[Dict[str, str]] = None,
@@ -154,3 +154,28 @@ class path_nameClient:
             return response
         except Exception as e:
             logger.error(f'OPTIONS 请求失败: {e}')
+
+
+# 快捷客户端方法，用于某些特殊场景
+def unauthorized_client():
+    """无认证的通用客户端"""
+    return APIClient()
+
+
+def authorized_client(api_client):
+    """
+    带认证的通用客户端
+    """
+    resp = api_client.request('POST', f'login', json={
+        'username': settings.USERNAME,
+        'password': settings.PASSWORD
+    })
+    assert resp.status_code == 200
+
+    token = resp.json()['data']['token']
+
+    assert token, '创建带认证的客户端失败, 未获取到 token'
+
+    api_client.set_token(token)
+
+    return api_client
