@@ -1,0 +1,17 @@
+- title: "创建用户 - 成功"
+  data:
+    username: "heisenberg"
+    email: "heisenberg@example.com"
+    password: "12345"
+  expected:
+    status_code: 201
+    message: "注册成功"
+
+- title: "创建用户 - 邮箱已存在"
+  data:
+    username: "gustavo"
+    email: "gustavo@example.com"  # 重复邮箱
+    password: "12345"
+  expected:
+    status_code: 400
+    error_code: "用户已存在"
