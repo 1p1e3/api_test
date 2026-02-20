@@ -19,3 +19,5 @@ UTILS_DIR = ROOT_DIR.joinpath('utils')
 
 # 测试用例
 CASES_DIR = ROOT_DIR.joinpath('cases')
+
+REPORTS_DIR = ROOT_DIR.joinpath('reports')
