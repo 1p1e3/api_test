@@ -75,7 +75,17 @@ Python: 3.13 或更高版本
 
 uv: 推荐使用 uv 管理项目。
 
-安装命令：powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1" (Windows) 或 curl -LsSf https://astral.sh/uv/install.sh | sh (macOS/Linux)
+安装命令：
+- Windows
+
+```bash
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1" 
+```
+- macOS/Linux
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
 
 
 ## 🚀 快速开始
