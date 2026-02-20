@@ -3,10 +3,12 @@ from dbutils.pooled_db import PooledDB
 import pymysql
 from pymysql.cursors import DictCursor
 from pymysql.connections import Connection
-from config.settings import settings
+from config.settings import Settings
 from utils.logger import logger
 
 class MySQLClient:
+
+    settings = Settings()
 
     _pool: Optional[PooledDB] = None
 
@@ -30,11 +32,11 @@ class MySQLClient:
                 creator=pymysql,
                 cursorclass=DictCursor,
                 **pool_config,
-                host=host or settings.MYSQL_HOST,
-                port=port or settings.MYSQL_PORT,
+                host=host or self.settings.MYSQL_HOST,
+                port=port or self.settings.MYSQL_PORT,
                 database=database or None,
-                user=user or settings.MYSQL_USER,
-                password=password or settings.MYSQL_PASSWORD,
+                user=user or self.settings.MYSQL_USER,
+                password=password or self.settings.MYSQL_PASSWORD,
                 )
         
         self.conn = None
