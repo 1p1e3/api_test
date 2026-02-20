@@ -1,6 +1,6 @@
 from typing import Any, Dict, Optional, Union
 from requests import Session
-from config.settings import settings
+from config.settings import Settings
 from urllib3.util.retry import Retry
 from requests.adapters import HTTPAdapter
 import requests
@@ -8,6 +8,9 @@ import requests
 from utils.logger import logger
 
 class APIClient:
+
+    settings = Settings()
+
     def __init__(self,
                  base_url: Optional[str] = None,
                  extra_header: Optional[Dict[str, str]] = None,
@@ -16,7 +19,7 @@ class APIClient:
                  ):
         
         # 优先使用实例化时显式传入的 base_url
-        self.base_url = base_url or settings.API_BASE_URL
+        self.base_url = base_url or self.settings.API_BASE_URL
         
         # 
         self.session = Session()
@@ -82,8 +85,6 @@ class APIClient:
                 ) -> requests.Response:
         full_url = self.base_url.rstrip('/') + '/' + endpoint.lstrip('/')
 
-        print(full_url)
-        
         # 处理请求数据
         req_kwargs = {
             'params': params,
@@ -100,7 +101,7 @@ class APIClient:
         try:
             response = self.session.request(method=method, url=full_url, **kwargs)
         except Exception as e:
-            logger.error(f'通用请求失败: {e}')
+            logger.error(f'{method} 请求失败: {e}')
             raise e
 
  
@@ -109,51 +110,27 @@ class APIClient:
     
     # 快捷请求方法
     def get(self, endpoint: str, **kwargs) -> requests.Response:
-        try:
-            response = self.session.request('GET', endpoint, **kwargs)
-            return response
-        except Exception as e:
-            logger.error(f'GET 请求失败: {e}')
+        return self.request('GET', endpoint, **kwargs)
 
 
     def post(self, endpoint: str, **kwargs) -> requests.Response:
-        try:
-            response = self.session.request('POST', endpoint, **kwargs)
-            return response
-        except Exception as e:
-            logger.error(f'POST 请求失败: {e}')
-    
+        return self.request('POST', endpoint, **kwargs)
+
 
     def put(self, endpoint: str, **kwargs) -> requests.Response:
-        try:
-            response = self.session.request('PUT', endpoint, **kwargs)
-            return response
-        except Exception as e:
-            logger.error(f'PUT 请求失败: {e}')
+        return self.request('PUT', endpoint, **kwargs)
     
 
     def delete(self, endpoint: str, **kwargs) -> requests.Response:
-        try:
-            response = self.session.request('DELETE', endpoint, **kwargs)
-            return response
-        except Exception as e:
-            logger.error(f'DELETE 请求失败: {e}')
+        return self.request('DELETE', endpoint, **kwargs)
     
 
     def patch(self, endpoint: str, **kwargs) -> requests.Response:
-        try:
-            response = self.session.request('PATCH', endpoint, **kwargs)
-            return response
-        except Exception as e:
-            logger.error(f'PATCH 请求失败: {e}')
+        return self.request('PATCH', endpoint, **kwargs)
     
 
     def options(self, endpoint: str, **kwargs) -> requests.Response:
-        try:
-            response = self.session.request('OPTIONS', endpoint, **kwargs)
-            return response
-        except Exception as e:
-            logger.error(f'OPTIONS 请求失败: {e}')
+        return self.request('OPTIONS', endpoint, **kwargs)
 
 
 # 快捷客户端方法，用于某些特殊场景
@@ -168,8 +145,8 @@ def authorized_client():
     """
     api_client = unauthorized_client()
     resp = api_client.request('POST', f'login', json={
-        'username': settings.USERNAME,
-        'password': settings.PASSWORD
+        'username': Settings().USERNAME,
+        'password': Settings().PASSWORD
     })
     assert resp.status_code == 200
 
