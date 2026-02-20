@@ -1,4 +1,4 @@
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import Literal
 from pydantic import Field, field_validator
 import os
@@ -24,16 +24,19 @@ class Settings(BaseSettings):
     MYSQL_POOL_SIZE: int
     MYSQL_MAX_OVERFLOW: int
 
+    # Notifier - 以飞书为例
+    FEISHU_WEBHOOK_URL: str
 
-    def __init__(self, **data):
-        env = os.getenv('APP_ENV', 'test').lower()
-        env_file = f'.env.{env}'
 
-        if not os.path.exists(env_file):
-            print(f'{env_file} 未找到')
-            env_file = None
+    # def __init__(self, **data):
+    #     env = os.getenv('APP_ENV', 'test').lower()
+    #     env_file = f'.env.{env}'
+
+    #     if not os.path.exists(env_file):
+    #         print(f'{env_file} 未找到')
+    #         env_file = None
         
-        super().__init__(_env_file=env_file, **data)
+    #     super().__init__(_env_file=env_file, **data)
     
 
     @field_validator('API_BASE_URL')
@@ -56,11 +59,22 @@ class Settings(BaseSettings):
         return f'mysql+pymysql://{self.MYSQL_USERNAME}:{password}@{self.MYSQL_HOST}:{self.MYSQL_PORT}'
 
 
-    model_config = {
-        'extra': 'ignore',
-        'env_file_encoding': 'utf-8'
-    }
-    
+    model_config = SettingsConfigDict(
+        env_file=None, 
+        extra='ignore',
+        env_file_encoding='utf-8',
+        case_sensitive=False
+    )
 
-# 单例
-settings = Settings()
+    def __init__(self, **data):
+        env = os.getenv('APP_ENV', 'test').lower()
+        env_file = f'.env.{env}'
+
+        if not os.path.exists(env_file):
+            print(f'配置文件 {env_file} 未找到, 将尝试从环境变量读取')
+            env_file = None
+        
+        # 动态设置 model_config 的 env_file
+        self.model_config['env_file'] = env_file
+
+        super().__init__(**data)
