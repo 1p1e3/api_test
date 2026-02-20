@@ -14,7 +14,6 @@ _logger.add(
     rotation='1 day',
     retention='7 days',
     compression='zip',
-    encoding='utf-8',
     enqueue=True,
     format='{time:YYYY-MM-DD HH:mm:ss.SSS} | {level: <8} | {name}:{function}:{line} - {message}'
 )
@@ -25,16 +24,7 @@ _logger.add(
     sink=sys.stdout,
     level='DEBUG',
     colorize=True,
-    format='<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | {level: <8} | {name}:{function}:{line} - {message}'
-)
-
-
-# 标准错误
-_logger.add(
-    sink=sys.stderr,
-    level='ERROR',
-    colorize=True,
-    format='<red>{time:YYYY-MM-DD HH:mm:ss.SSS}</red> | {level: <8} | {name}:{function}:{line} - {message}'
+    format='<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | <level>{level: <8}</level> | {name}:{function}:{line} - {message}'
 )
 
 
