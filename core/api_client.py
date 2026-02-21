@@ -99,7 +99,7 @@ class APIClient:
 
         # 发送请求
         try:
-            response = self.session.request(method=method, url=full_url, **kwargs)
+            response = self.session.request(method=method, url=full_url, **req_kwargs)
         except Exception as e:
             logger.error(f'{method} 请求失败: {e}')
             raise e
